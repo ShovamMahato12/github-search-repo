@@ -17,6 +17,8 @@ export async function POST(req) {
     await connectDB();
 
     const body = await req.json();
+    console.log("BODY:", body);
+
     const { id, name, html_url, description, owner, stargazers_count } = body;
 
     const existing = await Favorite.findOne({ repoId: id.toString() });
@@ -37,8 +39,11 @@ export async function POST(req) {
       description,
     });
 
+    console.log("SAVED:", newFavorite);
+
     return NextResponse.json(newFavorite, { status: 201 });
   } catch (error) {
+    console.error("POST ERROR:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
