@@ -21,9 +21,12 @@ export default function FavoritesPage() {
   const removeFavorite = async (repo) => {
     try {
       await axios.delete(`/api/favorites/${repo._id}`);
+      setFavorites((prev) =>
+        prev.filter((item) => item._id !== repo._id)
+      );
       toast.success("Removed from favorites");
-      fetchFavorites();
     } catch (error) {
+      console.error(error);
       toast.error("Error removing favorite");
     }
   };
