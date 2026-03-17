@@ -34,14 +34,18 @@ export default function Home() {
   };
 
   const addToFavorites = async (repo) => {
-    try {
-      await axios.post("/api/favorites", repo);
-      toast.success("Added to favorites!");
-      fetchFavorites();
-    } catch (error) {
-      toast.error("Already added to favorites");
-    }
-  };
+  try {
+    await axios.post("/api/favorites", repo);
+    toast.success("Added to favorites!");
+    fetchFavorites();
+  } catch (error) {
+    console.error(error); // 👈 IMPORTANT
+
+    toast.error(
+      error?.response?.data?.message || "Error adding to favorites"
+    );
+  }
+};
 
   useEffect(() => {
     fetchFavorites();
