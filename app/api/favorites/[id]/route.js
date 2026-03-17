@@ -22,7 +22,7 @@ export async function DELETE(req, { params }) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("DELETE ERROR:", error);
+    console.error(error);
     return NextResponse.json(
       { error: error.message },
       { status: 500 }
