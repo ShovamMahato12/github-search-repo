@@ -20,7 +20,7 @@ export default function FavoritesPage() {
 
   const removeFavorite = async (repo) => {
     try {
-      await axios.delete(`/api/favorites/${repo._id}`);
+      await axios.delete(`/api/favorites?id=${repo._id}`);
       setFavorites((prev) =>
         prev.filter((item) => item._id !== repo._id)
       );
