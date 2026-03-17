@@ -57,9 +57,16 @@ export async function DELETE(req) {
       );
     }
 
-    await Favorite.findByIdAndDelete(id);
+    const deleted = await Favorite.findOneAndDelete({ repoId: id });
 
-    return NextResponse.json({ message: "Deleted" });
+    if (!deleted) {
+      return NextResponse.json(
+        { message: "Item not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "Deleted successfully" });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
