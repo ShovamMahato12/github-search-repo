@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
+import { connectDB } from "@/lib/mongodb";
 import Favorite from "@/models/favorite";
 
-export async function DELETE(req, context) {
+export async function DELETE(req, { params }) {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    await connectDB();
 
-
-    const { id } = await context.params;
+    const { id } = params;
 
     const deleted = await Favorite.findByIdAndDelete(id);
 
@@ -25,7 +24,7 @@ export async function DELETE(req, context) {
   } catch (error) {
     console.error("DELETE ERROR:", error);
     return NextResponse.json(
-      { error: "Delete failed" },
+      { error: error.message },
       { status: 500 }
     );
   }

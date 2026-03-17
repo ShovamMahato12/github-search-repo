@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import Favorite from "@/models/favorite";
 
 export async function GET() {
@@ -33,7 +33,8 @@ export async function POST(req) {
       stargazers_count,
     } = body;
 
-    const existing = await Favorite.findOne({ repoId: id });
+    const existing = await Favorite.findOne({ repoId: id.toString() });
+
     if (existing) {
       return NextResponse.json(
         { message: "Already added to favorites" },
@@ -42,7 +43,7 @@ export async function POST(req) {
     }
 
     const newFavorite = await Favorite.create({
-      repoId: id,
+      repoId: id.toString(),
       name,
       owner: owner?.login,
       stars: stargazers_count,
@@ -54,36 +55,7 @@ export async function POST(req) {
   } catch (error) {
     console.error("POST Error:", error);
     return NextResponse.json(
-      { message: "Error adding favorite" },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req) {
-  try {
-    await connectDB();
-
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { message: "ID is required" },
-        { status: 400 }
-      );
-    }
-
-    await Favorite.findByIdAndDelete(id);
-
-    return NextResponse.json(
-      { message: "Deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("DELETE Error:", error);
-    return NextResponse.json(
-      { message: "Error deleting favorite" },
+      { message: error.message },
       { status: 500 }
     );
   }
